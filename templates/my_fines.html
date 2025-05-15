@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Fines</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #666;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .fine-amount {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .date {
+            color: #666;
+        }
+
+        .no-fines {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #666;
+            text-decoration: none;
+        }
+
+        .back-link:hover {
+            color: #333;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>My Fines</h2>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if fines %}
+            <table>
+                <tr>
+                    <th>Book Title</th>
+                    <th>Borrowed On</th>
+                    <th>Returned On</th>
+                    <th>Fine Amount</th>
+                </tr>
+                {% for fine in fines %}
+                    <tr>
+                        <td>{{ fine[0] }}</td>
+                        <td class="date">{{ fine[1].strftime('%Y-%m-%d') }}</td>
+                        <td class="date">{{ fine[2].strftime('%Y-%m-%d') if fine[2] else 'Not returned' }}</td>
+                        <td class="fine-amount">Rs. {{ fine[3] }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <div class="no-fines">
+                You have no outstanding fines.
+            </div>
+        {% endif %}
+
+        <a href="{{ url_for('user.dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+</body>
+</html>

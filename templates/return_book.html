@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Return Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-size: 16px;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e0e0e0;
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 8px 15px;
+            background: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        a:hover {
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+    <h2>Return a Book</h2>
+    <form method="POST">
+        <label for="issue_id">Select Issued Record:</label>
+        <select name="issue_id" required>
+            {% for record in issued_books %}
+                <option value="{{ record[0] }}">
+                    {{ record[1] }} - {{ record[2] }} (Due: {{ record[4].strftime('%Y-%m-%d') }})
+                </option>
+            {% endfor %}
+        </select><br><br>
+
+        <button type="submit">Return Book</button>
+    </form>
+
+    <a href="{{ url_for('librarian.view_issued_books') }}">View Issued Books</a>
+</body>
+</html>

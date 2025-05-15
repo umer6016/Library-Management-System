@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Operation Logs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            background-color: #f5f5f5;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .logs-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .action-type {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .action-type.add {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .action-type.edit {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .action-type.delete {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .details {
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-width: 400px;
+            overflow-x: auto;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .details ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .details li {
+            margin: 4px 0;
+        }
+
+        .timestamp {
+            color: #666;
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 8px 16px;
+            background-color: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+
+        .back-link:hover {
+            background-color: #e0e0e0;
+        }
+
+        .no-logs {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <h1>Book Operation Logs</h1>
+
+    <div class="logs-container">
+        {% if logs %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Book</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                        <th>Performed By</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                        <tr>
+                            <td class="timestamp">
+                                {{ log[5].strftime('%Y-%m-%d %H:%M:%S') }}
+                            </td>
+                            <td>
+                                {% if log[1] %}
+                                    {{ log[1] }}
+                                {% else %}
+                                    {{ log[3]['title'] }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="action-type {{ log[2].lower() }}">
+                                    {{ log[2] }}
+                                </span>
+                            </td>
+                            <td class="details">
+                                {% if log[2] == 'EDIT' %}
+                                    <strong>Old Values:</strong>
+                                    <ul>
+                                        {% for key, value in log[3]['old'].items() %}
+                                            <li>{{ key }}: {{ value }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                    <strong>New Values:</strong>
+                                    <ul>
+                                        {% for key, value in log[3]['new'].items() %}
+                                            <li>{{ key }}: {{ value }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <ul>
+                                        {% for key, value in log[3].items() %}
+                                            <li>{{ key }}: {{ value }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </td>
+                            <td>{{ log[4] or 'System' }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="no-logs">
+                No book operation logs found.
+            </div>
+        {% endif %}
+    </div>
+
+    <a href="{{ url_for('book.view_books') }}" class="back-link">← Back to Books</a>
+</body>
+</html> 

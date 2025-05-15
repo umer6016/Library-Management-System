@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Overdue Books - Library Management System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            overflow: hidden;
+            margin-top: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .overdue-days {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        .fine {
+            color: #e74c3c;
+            font-weight: 500;
+        }
+
+        .no-records {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Overdue Books</h1>
+        <div class="navbar-right">
+            <a href="{{ url_for('admin.dashboard') }}">Back to Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="table-container">
+            {% if overdue %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>Book Title</th>
+                        <th>Issue Date</th>
+                        <th>Due Date</th>
+                        <th>Days Overdue</th>
+                        <th>Fine</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in overdue %}
+                    <tr>
+                        <td>{{ record[0] }}</td>
+                        <td>{{ record[1] }}</td>
+                        <td>{{ record[2].strftime('%Y-%m-%d') }}</td>
+                        <td>{{ record[3].strftime('%Y-%m-%d') }}</td>
+                        <td class="overdue-days">
+                            {{ (record[3] - record[2]).days }} days
+                        </td>
+                        <td class="fine">₨{{ "%.2f"|format(record[4] or 0) }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="no-records">
+                <p>No overdue books found.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

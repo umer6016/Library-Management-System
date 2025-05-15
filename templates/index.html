@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome - Library Management System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-brand {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links a {
+            color: #3498db;
+            text-decoration: none;
+            margin-left: 1.5rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #2980b9;
+        }
+
+        .hero {
+            padding: 4rem 2rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .subtitle {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .button {
+            padding: 0.8rem 2rem;
+            border-radius: 6px;
+            font-size: 1.1rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .primary-button {
+            background: #3498db;
+            color: white;
+        }
+
+        .primary-button:hover {
+            background: #2980b9;
+        }
+
+        .secondary-button {
+            background: white;
+            color: #3498db;
+            border: 2px solid #3498db;
+        }
+
+        .secondary-button:hover {
+            background: #f8f9fa;
+        }
+
+        .features {
+            padding: 4rem 2rem;
+            background: white;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            padding: 1.5rem;
+            border-radius: 10px;
+            background: #f8f9fa;
+            text-align: center;
+        }
+
+        .feature-card h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: #34495e;
+            line-height: 1.6;
+        }
+
+        .flash-messages {
+            padding: 1rem 2rem;
+        }
+
+        .flash-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            text-align: center;
+        }
+
+        .flash-message.success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('index') }}" class="navbar-brand">Library MS</a>
+        <div class="nav-links">
+            {% if session.get('user_id') %}
+                <a href="{{ url_for('user.dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('user.logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('user.login') }}">Login</a>
+                <a href="{{ url_for('user.register') }}">Register</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash-message {% if category %}{{ category }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <section class="hero">
+        <h1>Welcome to Library Management System</h1>
+        <p class="subtitle">
+            A modern and efficient way to manage your library resources. Browse books,
+            track borrowings, and manage your reading journey all in one place.
+        </p>
+        <div class="cta-buttons">
+            {% if not session.get('user_id') %}
+                <a href="{{ url_for('user.register') }}" class="button primary-button">Get Started</a>
+                <a href="{{ url_for('user.login') }}" class="button secondary-button">Sign In</a>
+            {% else %}
+                <a href="{{ url_for('user.dashboard') }}" class="button primary-button">Go to Dashboard</a>
+                <a href="{{ url_for('book.view_books') }}" class="button secondary-button">Browse Books</a>
+            {% endif %}
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <h3>Easy Book Management</h3>
+                <p>Browse, search, and manage books with an intuitive interface.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Track Borrowings</h3>
+                <p>Keep track of borrowed books, due dates, and return status.</p>
+            </div>
+            <div class="feature-card">
+                <h3>User-Friendly</h3>
+                <p>Modern interface designed for the best user experience.</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html> 

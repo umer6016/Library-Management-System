@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Remove Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        p {
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        strong {
+            font-weight: bold;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 8px 15px;
+            background: #dc3545;
+            color: white;
+            border: 1px solid #dc3545;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #c82333;
+            border-color: #bd2130;
+        }
+
+        a {
+            display: inline-block;
+            margin-left: 10px;
+            padding: 8px 15px;
+            background: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+        }
+
+        a:hover {
+            background: #e0e0e0;
+        }
+
+        .messages {
+            margin: 20px 0;
+        }
+
+        .message {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        .message.error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+
+        .message.success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+
+        .book-details {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Remove Book Confirmation</h1>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {% if 'success' in message.lower() %}success{% else %}error{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="book-details">
+        <p><strong>Title:</strong> {{ book[1] }}</p>
+        <p><strong>Author:</strong> {{ book[2] }}</p>
+        <p><strong>Genre:</strong> {{ book[3] }}</p>
+        <p><strong>Quantity:</strong> {{ book[4] }}</p>
+    </div>
+
+    <p style="color: #dc3545;"><strong>Warning:</strong> This action cannot be undone. Are you sure you want to remove this book?</p>
+
+    <!-- Form to confirm book removal -->
+    <form method="POST" action="{{ url_for('book.remove_book', book_id=book[0]) }}" style="display: inline;">
+        <button type="submit">Yes, Remove Book</button>
+        <a href="{{ url_for('book.view_books') }}">Cancel</a>
+    </form>
+</body>
+</html>

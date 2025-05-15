@@ -1,0 +1,166 @@
+<!-- templates/admin_dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard - Library Management System</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: #f5f7fa;
+        }
+
+        .navbar {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .navbar a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-card h3 {
+            color: #2c3e50;
+            margin: 0 0 1rem 0;
+            font-size: 1.2rem;
+        }
+
+        .dashboard-card a {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            color: #3498db;
+            font-weight: 500;
+        }
+
+        .dashboard-card a:hover {
+            color: #2980b9;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        .flash-messages {
+            margin: 1rem 0;
+        }
+
+        .flash-message {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+        }
+
+        .flash-message.success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .flash-message.danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <h1>Admin Dashboard</h1>
+        <div class="navbar-right">
+            <span>Welcome, {{ session.get('admin_name', 'Admin') }}</span>
+            <a href="{{ url_for('admin.logout') }}">Logout</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+
+        <div class="dashboard-grid">
+            <div class="dashboard-card">
+                <div class="card-icon">👥</div>
+                <h3>Librarians</h3>
+                <a href="{{ url_for('admin.view_librarians') }}">View All Librarians</a>
+                <a href="{{ url_for('admin.add_librarian') }}">Add New Librarian</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-icon">📚</div>
+                <h3>Book Management</h3>
+                <a href="{{ url_for('admin.issued_books') }}">View Issued Books</a>
+                <a href="{{ url_for('admin.overdue_books') }}">Check Overdue Books</a>
+            </div>
+
+            <div class="dashboard-card">
+                <div class="card-icon">💾</div>
+                <h3>System</h3>
+                <a href="{{ url_for('admin.manual_backup') }}">Backup to Firebase</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

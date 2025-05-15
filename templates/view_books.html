@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Books</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ccc;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+        }
+
+        a {
+            display: inline-block;
+            padding: 8px 15px;
+            background: #f0f0f0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            margin-top: 20px;
+            margin-right: 10px;
+        }
+
+        a:hover {
+            background: #e0e0e0;
+        }
+
+        .actions {
+            white-space: nowrap;
+        }
+
+        .status {
+            color: #4CAF50;
+        }
+
+        .status.unavailable {
+            color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <h1>Books in the Library</h1>
+    
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <table>
+        <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Quantity</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        {% for book in books %}
+        <tr>
+            <td>{{ book[1] }}</td>
+            <td>{{ book[2] }}</td>
+            <td>{{ book[3] }}</td>
+            <td>{{ book[4] }}</td>
+            <td class="status {% if book[4] <= 0 %}unavailable{% endif %}">
+                {% if book[4] > 0 %}Available{% else %}Out of Stock{% endif %}
+            </td>
+            <td class="actions">
+                <a href="{{ url_for('book.edit_book', book_id=book[0]) }}">Edit</a>
+                <a href="{{ url_for('book.remove_book', book_id=book[0]) }}">Remove</a>
+                {% if book[4] > 0 %}
+                <form method="POST" action="{{ url_for('borrow.borrow_book', book_id=book[0]) }}" style="display: inline;">
+                    <button type="submit" style="padding: 8px 15px; margin-left: 5px;">Borrow</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+    <div>
+        <a href="{{ url_for('book.add_book') }}">Add New Book</a>
+        <a href="{{ url_for('book.view_logs') }}">View Operation Logs</a>
+        <a href="{{ url_for('user.dashboard') }}">Back to Dashboard</a>
+    </div>
+</body>
+</html>

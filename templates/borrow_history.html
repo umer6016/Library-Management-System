@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Borrowing History</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        th {
+            background-color: #f8f9fa;
+            color: #666;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .status {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            display: inline-block;
+        }
+
+        .status.returned {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status.overdue {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+
+        .status.active {
+            background-color: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .fine {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .date {
+            color: #666;
+        }
+
+        .no-history {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+            font-style: italic;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #666;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .flash-messages {
+            margin-bottom: 20px;
+            padding: 10px;
+            border-radius: 4px;
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+
+        .return-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .return-btn:hover {
+            background-color: #c62828;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Borrowing History</h1>
+
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            <div class="flash-messages">
+                {% for message in messages %}
+                    <div>{{ message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% endwith %}
+
+        {% if history %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Book Title</th>
+                        <th>Borrowed Date</th>
+                        <th>Due Date</th>
+                        <th>Return Date</th>
+                        <th>Status</th>
+                        <th>Fine</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for record in history %}
+                        <tr>
+                            <td>{{ record[0] }}</td>
+                            <td class="date">{{ record[1].strftime('%Y-%m-%d') }}</td>
+                            <td class="date">{{ record[2].strftime('%Y-%m-%d') }}</td>
+                            <td class="date">
+                                {% if record[3] %}
+                                    {{ record[3].strftime('%Y-%m-%d') }}
+                                {% else %}
+                                    Not returned
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if record[3] %}
+                                    <span class="status returned">Returned</span>
+                                {% else %}
+                                    {% if record[2] < current_date %}
+                                        <span class="status overdue">Overdue</span>
+                                    {% else %}
+                                        <span class="status active">Active</span>
+                                    {% endif %}
+                                    <form method="POST" action="{{ url_for('borrow.return_book', book_id=record[5]) }}" style="display: inline; margin-left: 10px;">
+                                        <button type="submit" class="return-btn">Return Book</button>
+                                    </form>
+                                {% endif %}
+                            </td>
+                            <td class="fine">
+                                {% if record[4] and record[4] > 0 %}
+                                    Rs. {{ record[4] }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="no-history">
+                You haven't borrowed any books yet.
+            </div>
+        {% endif %}
+
+        <a href="{{ url_for('user.dashboard') }}" class="back-link">← Back to Dashboard</a>
+    </div>
+</body>
+</html> 

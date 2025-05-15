@@ -1,0 +1,37 @@
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+    th, td {
+        padding: 6px;
+        border: 1px solid #ddd;
+    }
+    th {
+        background-color: #f5f5f5;
+    }
+</style>
+<h2>Borrowed Books (All Users)</h2>
+<table>
+    <tr>
+        <th>User</th>
+        <th>Email</th>
+        <th>Book</th>
+        <th>Borrowed On</th>
+        <th>Returned On</th>
+        <th>Fine</th>
+        <th>Status</th>
+    </tr>
+    {% for record in data %}
+        <tr>
+            <td>{{ record[0] }}</td>
+            <td>{{ record[1] }}</td>
+            <td>{{ record[2] }}</td>
+            <td>{{ record[3] }}</td>
+            <td>{{ record[4] or '—' }}</td>
+            <td>{{ record[5] }}</td>
+            <td>{{ 'Returned' if record[6] else 'Borrowed' }}</td>
+        </tr>
+    {% endfor %}
+</table>

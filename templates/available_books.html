@@ -1,0 +1,34 @@
+<style>
+    ul {
+        list-style: none;
+        padding: 0;
+        margin: 15px 0;
+    }
+    li {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    button {
+        margin-left: 10px;
+        padding: 3px 8px;
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+    }
+    a {
+        display: inline-block;
+        margin-top: 15px;
+        color: #0066cc;
+    }
+</style>
+<h2>Available Books</h2>
+<ul>
+    {% for book in books %}
+        <li>
+            {{ book[1] }} by {{ book[2] }} ({{ book[4] }} left)
+            <form method="POST" action="{{ url_for('borrow.borrow_book', book_id=book[0]) }}" style="display:inline;">
+                <button type="submit">Borrow</button>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+<a href="{{ url_for('borrow.my_books') }}">My Borrowed Books</a>

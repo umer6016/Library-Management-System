@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management System</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --primary-dark: #2980b9;
+            --secondary-color: #2c3e50;
+            --background-light: #f5f7fa;
+            --text-dark: #2c3e50;
+            --text-light: #7f8c8d;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+            --danger-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--background-light) 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .navbar {
+            background: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-dark);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-link:hover {
+            background: var(--background-light);
+            color: var(--primary-color);
+        }
+
+        .nav-link.primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-link.primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: white;
+            border-radius: 12px;
+            margin: 2rem auto;
+            max-width: 800px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-title {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .button {
+            padding: 0.8rem 2rem;
+            border-radius: 6px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .button.primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .button.primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .button.secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+
+        .button.secondary:hover {
+            background: var(--background-light);
+        }
+
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .flash-message {
+            padding: 1rem 2rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            text-align: center;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .navbar-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .nav-links {
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .nav-link {
+                width: 100%;
+                text-align: center;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="navbar-content">
+            <a href="{{ url_for('home') }}" class="logo">📚 Library MS</a>
+            <div class="nav-links">
+                {% if 'user_id' in session %}
+                    <a href="{{ url_for('user.dashboard') }}" class="nav-link">Dashboard</a>
+                    <a href="{{ url_for('book.view_books') }}" class="nav-link">Browse Books</a>
+                    <a href="{{ url_for('borrow.my_books') }}" class="nav-link">My Books</a>
+                    <a href="{{ url_for('borrow.my_fines') }}" class="nav-link">My Fines</a>
+                    <a href="{{ url_for('user.logout') }}" class="nav-link primary">Logout</a>
+                {% else %}
+                    <a href="{{ url_for('user.login') }}" class="nav-link">Login</a>
+                    <a href="{{ url_for('user.register') }}" class="nav-link primary">Register</a>
+                    <a href="{{ url_for('admin.login') }}" class="nav-link">Admin Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-messages">
+            {% for message in messages %}
+            <div class="flash-message">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    {% endwith %}
+
+    <div class="container">
+        <section class="hero">
+            <h1>Welcome to Library Management System</h1>
+            <p class="subtitle">
+                Discover a world of knowledge at your fingertips. Our digital library system makes it easy to explore,
+                borrow, and manage your reading journey.
+            </p>
+            <div class="cta-buttons">
+                {% if not session.get('user_id') %}
+                    <a href="{{ url_for('user.register') }}" class="button primary">Get Started</a>
+                    <a href="{{ url_for('user.login') }}" class="button secondary">Sign In</a>
+                    <a href="{{ url_for('admin.login') }}" class="button secondary">Admin Login</a>
+                {% else %}
+                    <a href="{{ url_for('book.view_books') }}" class="button primary">Browse Books</a>
+                    <a href="{{ url_for('borrow.my_books') }}" class="button secondary">My Books</a>
+                {% endif %}
+            </div>
+        </section>
+
+        <section class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📚</div>
+                <h3 class="feature-title">Extensive Collection</h3>
+                <p class="feature-description">
+                    Access a vast collection of books across various genres and subjects.
+                    Find exactly what you're looking for with our easy search system.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3 class="feature-title">Easy Management</h3>
+                <p class="feature-description">
+                    Keep track of your borrowed books, due dates, and reading history
+                    all in one place. Get notifications for upcoming returns.
+                </p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🚀</div>
+                <h3 class="feature-title">Quick Process</h3>
+                <p class="feature-description">
+                    Borrow and return books with just a few clicks. No more waiting
+                    in lines or dealing with paperwork.
+                </p>
+            </div>
+        </section>
+
+        <section class="stats">
+            <div class="stat-card">
+                <div class="stat-number">1000+</div>
+                <div class="stat-label">Books Available</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">500+</div>
+                <div class="stat-label">Active Members</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Digital Access</div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>
